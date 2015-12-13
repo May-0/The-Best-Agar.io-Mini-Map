@@ -1,28 +1,23 @@
 // ==UserScript==
-// @name         My Fancy New Agar Mini Map
-// @version      1
-// @description  A Mini Map for Agar.io
-// @author       Jake Mayeux
+// @name         My Fancy Agar Mini Map
+// @namespace    http://your.homepage/
+// @version      0.1
+// @description  enter something useful
+// @author       You
 // @match        http://agar.io/*
+// @grant        none
+// @run-at       document-end
 // @grant        GM_getValue
 // @grant        GM_setValue
-// @run-at       document-end
 // ==/UserScript==
-
-
 
 var vZ = GM_getValue("zoom", 50);
 
 var canvas = document.createElement('canvas');
 
 canvas.id = "mapCanvas";
-try{
-    canvas.width = (window.agar.dimensions[2]-window.agar.dimensions[0])/vZ;
-    canvas.height = (window.agar.dimensions[3]-window.agar.dimensions[1])/vZ;
-}catch(err){
-    location.reload();
-}
-
+canvas.width = (window.agar.dimensions[2]-window.agar.dimensions[0])/vZ;
+canvas.height = (window.agar.dimensions[3]-window.agar.dimensions[1])/vZ;
 canvas.style.zIndex = 8;
 canvas.style.position = "absolute";
 canvas.style.top = 0;
@@ -43,7 +38,7 @@ function drawUpdate(){
 
     var rX = window.agar.rawViewport.x-window.agar.dimensions[0];
     var rY = window.agar.rawViewport.y-window.agar.dimensions[1];
-
+    
     var grd=ctx.createRadialGradient(rX/vZ, rY/vZ, 1, rX/vZ, rY/vZ, 15000/vZ);
     grd.addColorStop(0, "rgba(0,0,0,0)");
     grd.addColorStop(1,"black");
@@ -57,7 +52,7 @@ function drawUpdate(){
     ctx.moveTo(0, rY/vZ);
     ctx.lineTo(canvas.width, rY/vZ);
     ctx.stroke();
-
+    
     for each (cell in window.agar.allCells){
         var cX = (cell.x-window.agar.dimensions[0]);
         var cY = (cell.y-window.agar.dimensions[1]);
@@ -79,11 +74,10 @@ window.addEventListener("keypress", function(e){
         vZ -= 5;
         mapCanvas.width = (window.agar.dimensions[2]-window.agar.dimensions[0])/vZ;
         mapCanvas.height = (window.agar.dimensions[3]-window.agar.dimensions[1])/vZ;
-        GM_setValue("zoom", vZ);
     }else if(e.keyCode == 45){
         vZ += 5;
         mapCanvas.width = (window.agar.dimensions[2]-window.agar.dimensions[0])/vZ;
         mapCanvas.height = (window.agar.dimensions[3]-window.agar.dimensions[1])/vZ;
-        GM_setValue("zoom", vZ);
     }
+    GM_setValue("zoom", vZ);
 });
